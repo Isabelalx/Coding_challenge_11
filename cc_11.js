@@ -13,7 +13,18 @@ class Book {
     };
     updateCopies(quantity) { // modifies the available copies
         this.copies += quantity; 
-        return this.copies;
+            return this.copies;
+        }
+    
+        lendBook(borrowerId, isbn) {
+            const book = this.books.find(book => book.isbn === isbn);
+            const borrower = this.borrowers.find(borrower => borrower.borrowerId === borrowerId);
+            if (book && borrower && book.copies > 1) { // checks conditions to lend book
+                book.updateCopies(-1); // removes 1 from stock
+                borrower.borrowBook(book.title);        
+            } else {
+                console.log("Cannot lend book.")
+            }
     }
 }
 
@@ -73,6 +84,15 @@ class Library {
     listBooks() {
         this.books.forEach(book => console.log(book.getDetails()));
     }
+    lendBook(borrowerId, isbn) {
+        const book = this.books.find(book => book.isbn === isbn);
+        const borrower = this.borrowers.find(borrower => borrower.borrowerId === borrowerId);
+        
+        if (book && borrower && book.copies > 0) { // checks conditions to lend book
+            book.updateCopies(-1); // removes 1 from stock
+            borrower.borrowBook(book.title);        
+        };
+    }
 }
 
 // Test Cases task 3
@@ -80,3 +100,16 @@ const library = new Library();
 library.addBook(book1);
 library.listBooks();
 // Expected output: "Title: The Great Gatsby, Author: F. Scott Fitzgerald, ISBN: 123456, Copies: 4"
+
+// Task 4
+// Implementing book borrowers
+
+library.lendBook(201, 123456);
+console.log(book1.getDetails());
+// Expected output: "Title: The Great Gatsby, Author: F. Scott Fitzgerald, ISBN: 123456, Copies: 3"
+console.log(borrower1.borrowedBooks);
+// Expected output: ["The Great Gatsby"]
+
+
+
+
